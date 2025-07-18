@@ -80,15 +80,6 @@ Percolation_clustering/
 ├── data/                   Example and benchmark datasets  
 ├── notebooks/              Jupyter notebooks for exploration  
 ├── results/                Example outputs (clusters, plots, metrics)  
-├── src/                    Core implementation  
-│   ├── graph_construction.py  
-│   ├── seed_selection.py  
-│   ├── percolation.py  
-│   ├── merging.py  
-│   └── pipeline.py  
-├── run_clustering.py       CLI entry point  
-├── requirements.txt        Python dependencies  
-├── LICENSE                 MIT License  
 └── README.md               This file  
 
 # Examples and Notebooks

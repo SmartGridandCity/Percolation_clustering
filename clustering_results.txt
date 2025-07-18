@@ -1,0 +1,20 @@
+CLUSTERING RESULTS
+========================================
+
+=== Agglomerative (Gower) ===
+ Silhouette (euclidean):            0.326
+ Silhouette (Gower):                0.554
+ Calinski–Harabasz Index:           525.844
+ Davies–Bouldin Index:              0.797
+ Dunn Index:                        0.001
+ Cophenetic Corr. Coef (CCC):       0.838
+
+=== K-Medoids (Gower) ===
+ Silhouette (euclidean):            0.326
+ Silhouette (Gower):                0.554
+ Calinski–Harabasz Index:           525.844
+ Davies–Bouldin Index:              0.797
+ Dunn Index:                        0.001
+ Cophenetic Corr. Coef (CCC):       0.838
+
+=== DBSCAN (Gower) ===

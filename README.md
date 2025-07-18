@@ -1,55 +1,93 @@
-# Research_Mixed_Data_Hierarchical_Clustering
+# Percolation Clustering for Mixed-Type Data
 
-Welcome to the GitHub repository dedicated to our innovative research on tackling the challenges of hierarchical clustering with mixed data types. In this repository, you will find all the essential code, tools, and resources to support and advance your understanding of hierarchical clustering in the context of mixed datasets.
+## Project Overview
 
-Our research introduces advanced methodologies designed to improve the efficiency and accuracy of hierarchical clustering when dealing with datasets that contain both categorical and numerical features. This repository is intended to be a comprehensive resource for researchers, data scientists, and machine learning enthusiasts who are grappling with the complexities of mixed data clustering.
+Percolation Clustering implements a scalable, interpretable pipeline for hierarchical clustering of datasets containing both numerical and categorical attributes. The method constructs a sparse, mixed-type neighborhood graph, selects high-centrality seed nodes, and grows clusters via edge-weight percolation under distance and categorical-match constraints. Initial components are merged by overlap criteria and refined with Ward linkage to produce a full dendrogram, whose optimal cut can be selected by internal validation indices.
 
 ## Key Features
-Within this repository, you’ll discover:
 
-Implementation of Hierarchical Clustering Algorithms: Code for clustering algorithms specifically adapted for mixed data types, including enhancements to handle categorical and numerical features simultaneously.
+- Mixed-type graph construction via Gower distance (single weighted graph) or layered Euclidean subgraphs  
+- Centrality-driven seed selection (betweenness or closeness) to focus on structurally important nodes  
+- Percolation-based cluster growth enforcing both distance threshold and minimum categorical-feature matches  
+- Overlap-based merging of percolated components followed by Ward linkage on centroids for hierarchical refinement  
+- No need to predefine the number of clusters; optimal cut can be chosen by cophenetic correlation, Silhouette score, or other metrics  
+- Near-linear runtime in practice through sparse graph representation and localized depth-first search  
+- Visualization tools for percolation stages and final dendrogram  
 
-Preprocessing Utilities: Tools for preprocessing and normalizing mixed datasets to ensure optimal clustering performance.
+## Installation
 
-Evaluation Metrics: Scripts to calculate various evaluation metrics, including the Cophenetic Correlation Coefficient, Silhouette Score, Dunn Index, and others, tailored for hierarchical clustering of mixed data.
+Requirements:
 
-Sample Datasets: Example datasets that exhibit mixed features, provided to test and demonstrate the effectiveness of our clustering approach.
+  • Python 3.7 or higher  
+  • numpy  
+  • pandas  
+  • scikit-learn  
+  • networkx  
+  • scipy  
 
-Comprehensive Documentation: Detailed documentation guiding you through the installation, implementation, and application of our hierarchical clustering techniques.
+Clone the repository and install dependencies:
 
-## Getting Started
-### Installation
-To get started, we recommend setting up a virtual environment (venv) to manage dependencies. Once your environment is ready, install the required packages using the following command:
-
-bash
-Copier le code
+```bash
+git clone https://github.com/SmartGridandCity/Percolation_clustering.git
+cd Percolation_clustering
 pip install -r requirements.txt
-### Required Packages
-Make sure your environment includes the following Python packages:
 
-- pandas (version 2.2.1) : To handle mixed datasets and data manipulation.
-- scipy (version 1.13.0) : For hierarchical clustering and other scientific computations.
-- numpy (version 1.26.4) : For numerical operations and array management.
-- networkx (version 3.3) : For graph manipulation and visualization.
-- matplotlib (version 3.8.3) : For short visualization.
-- seaborn (version 0.13.2) : For enhanced visualization.
-- scikit-learn (version 1.4.2) : For machine learning algorithms and preprocessing.
-Ensure your environment is properly configured to run the provided scripts and algorithms smoothly.
+# Command-Line Usage
 
-## How to Use This Repository
-Preprocessing: Start by using the provided preprocessing scripts to prepare your mixed dataset for clustering. The scripts handle categorical encoding, normalization, and missing value imputation.
+A CLI entry point (run_clustering.py) accepts a CSV input and clustering parameters:
 
-Clustering: Run the hierarchical clustering algorithms on your prepared dataset. You can experiment with different linkage criteria and distance metrics to observe their effects on the clustering output.
+python run_clustering.py \
+  --input data/mixed_data.csv \
+  --numerical sepal_length,sepal_width,petal_length,petal_width \
+  --categorical species \
+  --graph_method gower \
+  --seed_centrality betweenness \
+  --seed_fraction 0.2 \
+  --percolation_threshold 0.25 \
+  --overlap_threshold 0.8 \
+  --min_categorical_matches 1 \
+  --output_dir results/
 
-Evaluation: Use the evaluation scripts to assess the quality of your clustering results. The provided metrics will help you determine the optimal configuration for your specific dataset.
+Output:
 
-Explore and Innovate: Dive into the code, experiment with different datasets and configurations, and contribute your findings or enhancements to the repository.
+• clusters.csv — cluster assignments per sample
+• dendrogram.png — hierarchical tree visualization
+• metrics.json — Silhouette, Calinski–Harabasz, Dunn and Davies–Bouldin indices
 
-## Contribution
-We invite collaboration and feedback from the data science and machine learning communities. Whether you’re an expert in clustering techniques or just getting started, your insights and contributions are welcome. Together, we can push the boundaries of hierarchical clustering for mixed data types and develop more effective methods.
+# Python API
 
-## Contact
-For any questions, suggestions, or contributions, please feel free to open an issue or submit a pull request. Let’s work together to address the challenges of hierarchical mixed data clustering!
-- DJEBALI Sonia : sonia.djebali@devinci.fr
-- GUERARD Guillaume : guillaume.guerard@devinci.fr
-- THOMASSIN Pablo : pablo.thomassin@edu.devinci.fr
+The core class PercolationClusterer is exposed in src/pipeline.py:
+
+from src.pipeline import PercolationClusterer
+import pandas as pd
+
+df = pd.read_csv('data/mixed_data.csv')
+clusterer = PercolationClusterer(
+    numerical_features=['sepal_length','sepal_width','petal_length','petal_width'],
+    categorical_features=['species'],
+    graph_method='gower',
+    seed_centrality='closeness',
+    seed_fraction=0.1,
+    percolation_threshold=0.2,
+    overlap_threshold=0.85,
+    min_categorical_matches=1
+)
+labels, dendro = clusterer.fit_predict(df)
+
+# Repository Structure
+
+Percolation_clustering/
+├── data/                   Example and benchmark datasets  
+├── notebooks/              Jupyter notebooks for exploration  
+├── results/                Example outputs (clusters, plots, metrics)  
+└── README.md               This file  
+
+# Examples and Notebooks
+
+The notebooks/ directory contains step-by-step demos on:
+
+• Iris
+• Titanic
+• Palmer Penguins
+
+Each notebook illustrates parameter tuning, percolation growth visualization, and dendrogram analysis.
